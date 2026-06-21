@@ -4,4 +4,6 @@ bundle:
 targets:
   dev:
     default: true
-    workspace: host: https://dbc-f22a7945-bb8a.cloud.databricks.com
+    workspace: 
+       host: https://dbc-f22a7945-bb8a.cloud.databricks.com
+       profile: dbc-f22a7945-bb8a
