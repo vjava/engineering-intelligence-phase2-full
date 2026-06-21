@@ -1,0 +1,7 @@
+bundle:
+  name: engineering-intelligence-phase2
+
+targets:
+  dev:
+    default: true
+    workspace: host: https://dbc-f22a7945-bb8a.cloud.databricks.com
