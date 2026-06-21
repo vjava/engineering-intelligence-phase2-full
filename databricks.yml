@@ -2,23 +2,17 @@ bundle:
 name: engineering-intelligence-phase2
 
 targets:
-dev:
-default: true
+  dev:
+   default: true
 
 workspace:
   host: https://dbc-f22a7945-bb8a.cloud.databricks.com
 
 resources:
-
-jobs:
-
-engineering_intelligence_job:
-
-  name: engineering_intelligence_job
-
-  tasks:
-
+ jobs:
+   engineering_intelligence_job:
+     name: engineering_intelligence_job
+   tasks:
     - task_key: orchestrator
-
-      spark_python_task:
+    spark_python_task:
         python_file: notebooks/orchestrator/00_orchestrator.py
