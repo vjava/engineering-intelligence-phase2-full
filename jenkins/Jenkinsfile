@@ -1,1 +1,124 @@
-pipeline { agent any stages { stage('Deploy'){ steps { echo 'Deploying' }}}}
+pipeline {
+
+agent any
+
+environment {
+    DATABRICKS_HOST  = credentials('DATABRICKS_HOST')
+    DATABRICKS_TOKEN = credentials('DATABRICKS_TOKEN')
+}
+
+options {
+    timestamps()
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+}
+
+stages {
+
+    stage('Checkout') {
+
+        steps {
+
+            checkout scm
+
+            sh '''
+            echo "Current Directory"
+            pwd
+
+            echo "Repository Contents"
+            ls -la
+
+            echo "Jenkins Workspace"
+            ls -R
+            '''
+        }
+    }
+
+    stage('Verify Environment') {
+
+        steps {
+
+            sh '''
+            echo "Current User"
+            whoami
+
+            echo "Git Version"
+            git --version
+
+            echo "Databricks CLI Version"
+            databricks version
+            '''
+        }
+    }
+
+    stage('Verify Bundle') {
+
+        steps {
+
+            sh '''
+            if [ ! -f databricks.yml ]; then
+                echo "ERROR: databricks.yml not found"
+                exit 1
+            fi
+
+            echo "Bundle File Found"
+            '''
+        }
+    }
+
+    stage('Validate Bundle') {
+
+        steps {
+
+            sh '''
+            databricks bundle validate
+            '''
+        }
+    }
+
+    stage('Deploy Bundle') {
+
+        steps {
+
+            sh '''
+            databricks bundle deploy --target dev
+            '''
+        }
+    }
+
+    stage('Run Job') {
+
+        steps {
+
+            sh '''
+            databricks bundle run engineering_intelligence_job --target dev
+            '''
+        }
+    }
+}
+
+post {
+
+    success {
+
+        echo '===================================='
+        echo 'DEPLOYMENT SUCCESSFUL'
+        echo '===================================='
+    }
+
+    failure {
+
+        echo '===================================='
+        echo 'DEPLOYMENT FAILED'
+        echo '===================================='
+    }
+
+    always {
+
+        echo '===================================='
+        echo 'PIPELINE FINISHED'
+        echo '===================================='
+    }
+}
+
+}
