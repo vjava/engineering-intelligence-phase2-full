@@ -94,10 +94,14 @@ stages {
     }
 
     stage('Deploy Bundle') {
-		steps {
-			sh 'databricks bundle deploy --target dev'
-		}
-	}
+
+        steps {
+
+            sh '''
+            databricks bundle deploy --target dev
+            '''
+        }
+    }
 
     stage('Run Job') {
 
