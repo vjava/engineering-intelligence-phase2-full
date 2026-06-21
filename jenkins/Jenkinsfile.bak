@@ -65,6 +65,29 @@ stages {
             '''
         }
     }
+	stage('Configure Databricks') {
+
+	```
+	steps {
+
+		sh '''
+		mkdir -p ~/.databricks
+
+		cat > ~/.databrickscfg << EOF
+		```
+
+		[DEFAULT]
+		host=${DATABRICKS_HOST}
+		token=${DATABRICKS_TOKEN}
+		EOF
+
+		```
+			echo "Databricks configuration created"
+			'''
+		}
+		```
+
+	}
 
     stage('Validate Bundle') {
 
