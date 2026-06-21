@@ -67,24 +67,21 @@ stages {
     }
 	stage('Configure Databricks') {
 
-	steps {
+		steps {
 
-		sh '''
-		mkdir -p ~/.databricks
+			sh """
+			echo "[DEFAULT]" > /var/jenkins_home/.databrickscfg
+			echo "host=${DATABRICKS_HOST}" >> /var/jenkins_home/.databrickscfg
+			echo "token=${DATABRICKS_TOKEN}" >> /var/jenkins_home/.databrickscfg
 
-		cat > ~/.databrickscfg << EOF
+			echo "Databricks config created"
 
-		[DEFAULT]
-		host=${DATABRICKS_HOST}
-		token=${DATABRICKS_TOKEN}
-		EOF
-
-			echo "Databricks configuration created"
-			'''
+			cat /var/jenkins_home/.databrickscfg
+			"""
 		}
 
+		}
 
-	}
 
     stage('Validate Bundle') {
 
